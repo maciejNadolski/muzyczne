@@ -52,12 +52,38 @@ def plt_fft(audiofile):
     plt.ylabel("Amplitude")
     plt.xlabel("Frequency [Hz]")
     plt.show()
-    #cmath fft na real channel1 imag channel2
+
+
+def plt_fft_stereo(audiofile1, audiofile2):
+    #oba kanały powinny miec tą samą częstotliwość, zrobić try catch  na to lub assert w przyszłości
+    signal_wave1 = audiofile1.readframes(-1)
+    signal_wave2 = audiofile2.readframes(-1)
+    signal_array1 = np.frombuffer(signal_wave1, dtype=np.int16)
+    signal_array2 = np.frombuffer(signal_wave2, dtype=np.int16)
+
+    fun = signal_array1 + signal_array2*1j
+    N = len(signal_array1)
+    sampling_rate = audiofile1.getframerate()
+
+    normalize = N / 2
+    frequency_axis = fftfreq(N, d=1.0 / sampling_rate)
+    norm_amplitude = np.abs(fft(fun)) / normalize
+
+    plt.figure(figsize=(15, 5))
+    plt.plot(frequency_axis, norm_amplitude)
+    plt.title("FFT")
+    plt.ylabel("Amplitude")
+    plt.xlabel("Frequency [Hz]")
+    plt.show()
+
+
 
 
 
 if __name__ == "__main__":
+    # TODO: uporządkować kod na funkcje, wykresy natężena dźwięku od częstotliwości,filtry
     # plt_time(obj2)
     # plt_time(obj2)
     #
-    plt_fft(obj1)
+    # plt_fft(obj1)
+    plt_fft_stereo(obj1,obj2)
