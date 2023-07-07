@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.fft import fft, fftfreq, rfft, rfftfreq
 from pydub import AudioSegment
+import math
 
 dzwiek = AudioSegment.from_wav("resources/lethergo.wav")
 channels = dzwiek.split_to_mono()
@@ -46,6 +47,7 @@ def plt_fft(audiofile):
     frequency_axis = rfftfreq(N,d=1.0/sampling_rate)
     norm_amplitude = np.abs(rfft(signal_array))/normalize
 
+
     plt.figure(figsize=(15, 5))
     plt.plot(frequency_axis,norm_amplitude)
     plt.title("FFT")
@@ -67,23 +69,27 @@ def plt_fft_stereo(audiofile1, audiofile2):
 
     normalize = N / 2
     frequency_axis = fftfreq(N, d=1.0 / sampling_rate)
+
+
     norm_amplitude = np.abs(fft(fun)) / normalize
 
+
+    decibels = 10 * np.log10(norm_amplitude/1)
+
+
+
     plt.figure(figsize=(15, 5))
-    plt.plot(frequency_axis, norm_amplitude)
+    plt.plot(frequency_axis, decibels)
     plt.title("FFT")
-    plt.ylabel("Amplitude")
+    plt.ylabel("Intensivity [dB]")
     plt.xlabel("Frequency [Hz]")
     plt.show()
 
 
-
-
-
 if __name__ == "__main__":
-    # TODO: uporządkować kod na funkcje, wykresy natężena dźwięku od częstotliwości,filtry
+    # TODO: uporządkować kod na funkcje,filtry
     # plt_time(obj2)
     # plt_time(obj2)
     #
-    # plt_fft(obj1)
+    # plt_fft(obj2)
     plt_fft_stereo(obj1,obj2)
